@@ -1,0 +1,93 @@
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.about-text p {
+  font-size: 16px;
+  color: #a0a0b0;
+  line-height: 1.85;
+  font-weight: 300;
+  margin-bottom: 32px;
+}
+
+.about-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.highlight-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #c8c8d8;
+  transition: border-color 0.2s;
+}
+
+.highlight-item:hover {
+  border-color: rgba(108,99,255,0.3);
+}
+
+.highlight-icon { font-size: 18px; }
+
+/* CODE CARD */
+.about-card {
+  background: #0d0d14;
+  border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+}
+
+.about-card-header {
+  display: flex;
+  gap: 8px;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.card-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.card-dot.red { background: #ff5f57; }
+.card-dot.yellow { background: #febc2e; }
+.card-dot.green { background: #28c840; }
+
+.about-card-body {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.code-line {
+  font-size: 13px;
+  line-height: 1.6;
+  display: block;
+}
+
+.code-line.indent { padding-left: 20px; }
+
+.code-const { color: #c792ea; }
+.code-var { color: #82aaff; }
+.code-key { color: #f07178; }
+.code-str { color: #c3e88d; }
+.code-bool { color: #ff9cac; }
+
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .about-highlights { grid-template-columns: 1fr; }
+}
