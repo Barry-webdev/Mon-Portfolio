@@ -1,324 +1,291 @@
+import { useEffect, useState } from "react";
 import { useLang, t } from "../hooks/useLang";
 import { info } from "../data";
 
-interface Stat {
-  value: string;
-  labelFr: string;
-  labelEn: string;
-}
+const STATS = [
+  { value: "3+", labelFr: "Ans d'exp.",    labelEn: "Years exp." },
+  { value: "6",  labelFr: "Projets",       labelEn: "Projects"   },
+  { value: "2",  labelFr: "Formations",    labelEn: "Trainings"  },
+];
 
-const STATS: Stat[] = [
-  { value: "3+", labelFr: "Ans d'expérience", labelEn: "Years exp." },
-  { value: "3", labelFr: "Projets", labelEn: "Projects" },
-  { value: "2", labelFr: "Formations", labelEn: "Trainings" },
+const FLOATING_TAGS = [
+  { label: "React.js",  pos: "top: -16px; right: -24px",  delay: "0s"    },
+  { label: "Next.js",   pos: "bottom: -16px; right: -20px", delay: "0.4s" },
+  { label: "Node.js",   pos: "bottom: -16px; left: -20px",  delay: "0.8s" },
 ];
 
 export default function Hero() {
   const { lang } = useLang();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const [firstName, ...rest] = info.name.split(" ");
   const lastName = rest.join(" ");
 
+  const delay = (ms: number): React.CSSProperties => ({
+    animation: mounted ? `fadeInUp 0.7s cubic-bezier(.22,1,.36,1) ${ms}ms both` : "none",
+  });
+
   return (
-    <section
-      id="home"
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "6rem 1.25rem 4rem",
-        overflow: "hidden",
-        backgroundColor: "#0A0A0F",
-      }}
-    >
-      {/* Orbs background */}
-      <div
-        style={{
-          position: "absolute",
-          top: "-8rem",
-          left: "-8rem",
-          width: "480px",
-          height: "480px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(0,212,170,0.12) 0%, transparent 70%)",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "-6rem",
-          right: "-6rem",
-          width: "400px",
-          height: "400px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%)",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-        }}
-      />
+    <section id="home" style={{
+      position: "relative", minHeight: "100vh",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "6rem 1.5rem 5rem", overflow: "hidden",
+      backgroundColor: "var(--bg)",
+    }}>
 
-      {/* Content */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          maxWidth: "1100px",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-          gap: "1.5rem",
-        }}
-      >
-        {/* Badge disponible */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            padding: "0.375rem 1rem",
-            borderRadius: "9999px",
-            border: "1px solid rgba(0,212,170,0.3)",
-            backgroundColor: "rgba(0,212,170,0.08)",
-            color: "#00D4AA",
-            fontSize: "0.8125rem",
-            fontWeight: 500,
-          }}
-        >
-          <span
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              backgroundColor: "#00D4AA",
-              boxShadow: "0 0 0 3px rgba(0,212,170,0.25)",
-              animation: "pulse 2s infinite",
-            }}
-          />
-          {lang === "fr" ? "Disponible pour des projets" : "Available for projects"}
-        </div>
+      {/* ── Orbs ── */}
+      <div style={{ position:"absolute", inset:0, pointerEvents:"none", overflow:"hidden" }}>
+        <div style={{
+          position:"absolute", top:"-120px", left:"-100px",
+          width:"600px", height:"600px", borderRadius:"50%",
+          background:"radial-gradient(circle, rgba(0,212,170,0.09) 0%, transparent 65%)",
+          filter:"blur(40px)",
+          animation: "float 8s ease-in-out infinite",
+        }}/>
+        <div style={{
+          position:"absolute", bottom:"-100px", right:"-80px",
+          width:"500px", height:"500px", borderRadius:"50%",
+          background:"radial-gradient(circle, rgba(108,99,255,0.1) 0%, transparent 65%)",
+          filter:"blur(40px)",
+          animation: "float 10s ease-in-out infinite reverse",
+        }}/>
+        {/* Grid */}
+        <div style={{
+          position:"absolute", inset:0, opacity:0.025,
+          backgroundImage:"linear-gradient(var(--text-primary) 1px,transparent 1px),linear-gradient(90deg,var(--text-primary) 1px,transparent 1px)",
+          backgroundSize:"64px 64px",
+        }}/>
+      </div>
 
-        {/* Nom */}
-        <h1
-          style={{
-            margin: 0,
-            fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
-            fontWeight: 800,
-            lineHeight: 1.1,
-            letterSpacing: "-0.03em",
-            color: "#ffffff",
-          }}
-        >
-          <span style={{ display: "block" }}>{firstName}</span>
-          <span
-            style={{
-              display: "block",
-              background: "linear-gradient(135deg, #00D4AA 0%, #6C63FF 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            {lastName}
-          </span>
-        </h1>
+      {/* ── Layout ── */}
+      <div style={{
+        position:"relative", zIndex:1,
+        maxWidth:"1100px", width:"100%",
+        display:"flex", flexDirection:"column",
+        alignItems:"center", gap:"2.5rem",
+      }} className="hero-layout">
 
-        {/* Titre */}
-        <p
-          style={{
-            margin: 0,
-            fontSize: "clamp(1rem, 3vw, 1.25rem)",
-            fontWeight: 500,
-            color: "#a3a3a3",
-            letterSpacing: "0.01em",
-          }}
-        >
-          {t(info.title, lang)}
-        </p>
+        {/* ── Left: text ── */}
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"center", textAlign:"center", maxWidth:"640px" }} className="hero-text">
 
-        {/* Tagline */}
-        <p
-          style={{
-            margin: 0,
-            fontSize: "0.875rem",
-            color: "#6b7280",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-          }}
-        >
-          {t(info.tagline, lang)}
-        </p>
+          {/* Badge */}
+          <div style={{ ...delay(0), marginBottom:"1.5rem",
+            display:"inline-flex", alignItems:"center", gap:"0.5rem",
+            padding:"0.375rem 1rem", borderRadius:"9999px",
+            border:"1px solid rgba(0,212,170,0.3)",
+            backgroundColor:"rgba(0,212,170,0.07)",
+            color:"var(--accent-teal)", fontSize:"0.8125rem", fontWeight:600,
+          }}>
+            <span style={{
+              width:"8px", height:"8px", borderRadius:"50%",
+              backgroundColor:"var(--accent-teal)",
+              animation:"pulse-dot 2s ease infinite",
+            }}/>
+            {lang==="fr" ? "Disponible pour des projets" : "Available for projects"}
+          </div>
 
-        {/* CTA */}
-        <div
-          style={{
-            display: "flex",
-            gap: "0.75rem",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            marginTop: "0.5rem",
-          }}
-        >
-          <a
-            href="#projects"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              padding: "0.75rem 1.5rem",
-              borderRadius: "0.75rem",
-              background: "linear-gradient(135deg, #00D4AA 0%, #6C63FF 100%)",
-              color: "#fff",
-              fontWeight: 600,
-              fontSize: "0.875rem",
-              textDecoration: "none",
-              boxShadow: "0 8px 24px rgba(0,212,170,0.25)",
-              transition: "transform 0.2s, box-shadow 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,212,170,0.35)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,212,170,0.25)";
-            }}
-          >
-            {lang === "fr" ? "Voir mes projets" : "View my projects"}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-          <a
-            href="#contact"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "0.75rem 1.5rem",
-              borderRadius: "0.75rem",
-              border: "1px solid rgba(255,255,255,0.12)",
-              backgroundColor: "rgba(255,255,255,0.04)",
-              color: "#d4d4d4",
-              fontWeight: 600,
-              fontSize: "0.875rem",
-              textDecoration: "none",
-              transition: "border-color 0.2s, color 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
-              e.currentTarget.style.color = "#d4d4d4";
-            }}
-          >
-            {lang === "fr" ? "Me contacter" : "Contact me"}
-          </a>
-        </div>
+          {/* Name */}
+          <h1 style={{
+            ...delay(100), margin:"0 0 0.75rem",
+            fontSize:"clamp(2.75rem, 9vw, 5rem)",
+            fontWeight:900, lineHeight:1.05, letterSpacing:"-0.04em",
+            color:"var(--text-primary)", fontFamily:"var(--font-sans)",
+          }}>
+            <span style={{ display:"block" }}>{firstName}</span>
+            <span style={{
+              display:"block",
+              background:"linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-purple) 100%)",
+              WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text",
+            }}>
+              {lastName}
+            </span>
+          </h1>
 
-        {/* Stats */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "2rem",
-            marginTop: "1rem",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
-        >
-          {STATS.map((stat, i) => (
-            <div key={stat.value} style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
-              <div style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    fontSize: "1.875rem",
-                    fontWeight: 800,
-                    color: "#ffffff",
-                    lineHeight: 1,
-                  }}
-                >
-                  {stat.value}
+          {/* Title */}
+          <p style={{ ...delay(200), margin:"0 0 0.5rem",
+            fontSize:"clamp(1rem, 3vw, 1.25rem)", fontWeight:600,
+            color:"var(--text-secondary)", letterSpacing:"0.01em",
+          }}>
+            {t(info.title, lang)}
+          </p>
+
+          {/* Tagline */}
+          <p style={{ ...delay(300), margin:"0 0 2rem",
+            fontSize:"0.8125rem", color:"var(--text-muted)",
+            letterSpacing:"0.1em", textTransform:"uppercase",
+            fontFamily:"var(--font-mono)",
+          }}>
+            {t(info.tagline, lang)}
+          </p>
+
+          {/* CTAs */}
+          <div style={{ ...delay(400),
+            display:"flex", gap:"0.75rem", flexWrap:"wrap", justifyContent:"center",
+            marginBottom:"2.5rem",
+          }}>
+            <a href="#projects" style={{
+              display:"inline-flex", alignItems:"center", gap:"0.5rem",
+              padding:"0.8rem 1.75rem", borderRadius:"0.875rem",
+              background:"linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-purple) 100%)",
+              color:"#fff", fontWeight:700, fontSize:"0.9375rem",
+              textDecoration:"none", boxShadow:"var(--shadow-glow-teal)",
+              transition:"transform 0.2s, box-shadow 0.2s",
+            }}
+              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 16px 40px rgba(0,212,170,0.4)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="var(--shadow-glow-teal)"; }}
+            >
+              {lang==="fr" ? "Voir mes projets" : "View my projects"}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#contact" style={{
+              display:"inline-flex", alignItems:"center", gap:"0.5rem",
+              padding:"0.8rem 1.75rem", borderRadius:"0.875rem",
+              border:"1px solid var(--border-hover)",
+              backgroundColor:"var(--bg-card)", color:"var(--text-secondary)",
+              fontWeight:600, fontSize:"0.9375rem", textDecoration:"none",
+              transition:"border-color 0.2s, color 0.2s, transform 0.2s",
+            }}
+              onMouseEnter={e=>{ e.currentTarget.style.color="var(--text-primary)"; e.currentTarget.style.transform="translateY(-3px)"; }}
+              onMouseLeave={e=>{ e.currentTarget.style.color="var(--text-secondary)"; e.currentTarget.style.transform="translateY(0)"; }}
+            >
+              {lang==="fr" ? "Me contacter" : "Contact me"}
+            </a>
+          </div>
+
+          {/* Stats */}
+          <div style={{ ...delay(500), display:"flex", alignItems:"center", gap:"0", flexWrap:"wrap", justifyContent:"center" }}>
+            {STATS.map((stat, i) => (
+              <div key={stat.value} style={{ display:"flex", alignItems:"center" }}>
+                <div style={{ textAlign:"center", padding:"0 1.5rem" }}>
+                  <div style={{
+                    fontSize:"2rem", fontWeight:900, color:"var(--text-primary)",
+                    fontFamily:"var(--font-sans)", lineHeight:1,
+                    background:"linear-gradient(135deg, var(--accent-teal), var(--accent-purple))",
+                    WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text",
+                  }}>{stat.value}</div>
+                  <div style={{ fontSize:"0.75rem", color:"var(--text-muted)", marginTop:"0.25rem", whiteSpace:"nowrap" }}>
+                    {lang==="fr" ? stat.labelFr : stat.labelEn}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    fontSize: "0.75rem",
-                    color: "#6b7280",
-                    marginTop: "0.25rem",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {lang === "fr" ? stat.labelFr : stat.labelEn}
-                </div>
+                {i < STATS.length - 1 && (
+                  <div style={{ width:"1px", height:"2rem", backgroundColor:"var(--border)" }}/>
+                )}
               </div>
-              {i < STATS.length - 1 && (
-                <div
-                  style={{
-                    width: "1px",
-                    height: "2rem",
-                    backgroundColor: "rgba(255,255,255,0.08)",
-                  }}
-                />
-              )}
+            ))}
+          </div>
+        </div>
+
+        {/* ── Right: Avatar card ── */}
+        <div style={{ ...delay(300), position:"relative", flexShrink:0 }} className="hero-avatar">
+          {/* Glow ring */}
+          <div style={{
+            position:"absolute", inset:"-20px", borderRadius:"50%",
+            background:"conic-gradient(from 0deg, var(--accent-teal), var(--accent-purple), var(--accent-teal))",
+            filter:"blur(24px)", opacity:0.25,
+            animation:"float 6s ease-in-out infinite",
+          }}/>
+
+          {/* Card */}
+          <div style={{
+            position:"relative", zIndex:1,
+            width:"200px", padding:"2rem 1.5rem",
+            borderRadius:"1.75rem",
+            border:"1px solid var(--border)",
+            backgroundColor:"var(--bg-card)",
+            backdropFilter:"blur(20px)",
+            display:"flex", flexDirection:"column", alignItems:"center", gap:"1rem",
+            boxShadow:"var(--shadow-card)",
+          }}>
+            {/* Avatar */}
+            <div style={{
+              width:"96px", height:"96px", borderRadius:"1.25rem", overflow:"hidden",
+              background:"linear-gradient(135deg, var(--accent-teal), var(--accent-purple))",
+              boxShadow:"0 8px 28px rgba(108,99,255,0.4)",
+              flexShrink:0,
+            }}>
+              <img src="/photo.jpeg" alt="Barry Abdoul Razzaï" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+            </div>
+
+            <div style={{ textAlign:"center" }}>
+              <p style={{ margin:0, fontWeight:800, color:"var(--text-primary)", fontSize:"0.9375rem", lineHeight:1.3 }}>
+                {info.name}
+              </p>
+              <p style={{ margin:"0.25rem 0 0", fontSize:"0.75rem", color:"var(--text-muted)", fontFamily:"var(--font-mono)" }}>
+                {t(info.title, lang)}
+              </p>
+            </div>
+
+            {/* Status */}
+            <div style={{
+              display:"flex", alignItems:"center", gap:"0.4rem",
+              padding:"0.3rem 0.875rem", borderRadius:"9999px",
+              backgroundColor:"rgba(0,212,170,0.1)", color:"var(--accent-teal)",
+              fontSize:"0.75rem", fontWeight:700, border:"1px solid rgba(0,212,170,0.2)",
+            }}>
+              <span style={{
+                width:"6px", height:"6px", borderRadius:"50%",
+                backgroundColor:"var(--accent-teal)",
+                animation:"pulse-dot 2s ease infinite",
+              }}/>
+              {lang==="fr" ? "Disponible" : "Available"}
+            </div>
+          </div>
+
+          {/* Floating tags */}
+          {FLOATING_TAGS.map((tag) => (
+            <div key={tag.label} style={{
+              position:"absolute",
+              ...Object.fromEntries(
+                tag.pos.split(";").filter(Boolean).map(s => {
+                  const [k, v] = s.trim().split(":");
+                  return [k.trim().replace(/-([a-z])/g, (_,c) => c.toUpperCase()), v.trim()];
+                })
+              ),
+              padding:"0.375rem 0.875rem", borderRadius:"0.875rem",
+              border:"1px solid var(--border)",
+              backgroundColor:"var(--bg-alt)",
+              fontSize:"0.75rem", fontWeight:600, color:"var(--text-secondary)",
+              boxShadow:"var(--shadow-card)",
+              animation:`float 5s ease-in-out ${tag.delay} infinite`,
+              whiteSpace:"nowrap", fontFamily:"var(--font-mono)",
+            }}>
+              {tag.label}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Scroll hint */}
-      <a
-        href="#about"
-        aria-label="Scroll down"
-        style={{
-          position: "absolute",
-          bottom: "2rem",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "0.25rem",
-          color: "#4b5563",
-          textDecoration: "none",
-        }}
+      {/* ── Scroll hint ── */}
+      <a href="#about" aria-label="Scroll down" style={{
+        position:"absolute", bottom:"2rem", left:"50%", transform:"translateX(-50%)",
+        display:"flex", flexDirection:"column", alignItems:"center", gap:"0.375rem",
+        color:"var(--text-muted)", textDecoration:"none",
+        transition:"color 0.2s",
+        animation: mounted ? "fadeIn 1s 1s both" : "none",
+      }}
+        onMouseEnter={e=>{ e.currentTarget.style.color="var(--text-secondary)"; }}
+        onMouseLeave={e=>{ e.currentTarget.style.color="var(--text-muted)"; }}
       >
-        <div
-          style={{
-            width: "20px",
-            height: "34px",
-            borderRadius: "10px",
-            border: "2px solid currentColor",
-            display: "flex",
-            justifyContent: "center",
-            paddingTop: "4px",
-          }}
-        >
-          <div
-            style={{
-              width: "4px",
-              height: "6px",
-              borderRadius: "2px",
-              backgroundColor: "currentColor",
-              animation: "bounce 1.5s infinite",
-            }}
-          />
+        <div style={{
+          width:"20px", height:"34px", borderRadius:"10px",
+          border:"2px solid currentColor",
+          display:"flex", justifyContent:"center", paddingTop:"4px",
+        }}>
+          <div style={{
+            width:"4px", height:"7px", borderRadius:"2px",
+            backgroundColor:"currentColor",
+            animation:"bounce-scroll 1.5s ease infinite",
+          }}/>
         </div>
+        <span style={{ fontSize:"0.625rem", letterSpacing:"0.15em", textTransform:"uppercase", fontFamily:"var(--font-mono)" }}>scroll</span>
       </a>
 
       <style>{`
-        @keyframes pulse {
-          0%, 100% { box-shadow: 0 0 0 3px rgba(0,212,170,0.25); }
-          50% { box-shadow: 0 0 0 6px rgba(0,212,170,0.1); }
-        }
-        @keyframes bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(6px); }
+        @media (min-width: 900px) {
+          .hero-layout { flex-direction: row !important; justify-content: space-between; align-items: center; }
+          .hero-text { align-items: flex-start !important; text-align: left !important; }
         }
       `}</style>
     </section>
