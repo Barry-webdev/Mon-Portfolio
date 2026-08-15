@@ -35,6 +35,8 @@ export default function Contact() {
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
           access_key: "2e51c5c2-2473-4be5-93e0-15a6f86431f7",
+          subject: `[Portfolio] Nouveau message de ${form.name}`,
+          from_name: form.name,
           name: form.name,
           email: form.email,
           message: form.message,
