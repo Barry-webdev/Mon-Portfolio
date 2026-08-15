@@ -1,12 +1,7 @@
 import { useState } from "react";
-import emailjs from "@emailjs/browser";
 import { useLang } from "../hooks/useLang";
 import { info } from "../data";
 import { useScrollReveal } from "../hooks/useScrollReveal";
-
-const EMAILJS_SERVICE  = "service_mbe57vi";
-const EMAILJS_TEMPLATE = "template_4pcbs0b";
-const EMAILJS_PUBLIC   = "MFRQ3N756gv1hVbuW";
 
 interface FormState { name: string; email: string; message: string; }
 type SendStatus = "idle" | "sending" | "success" | "error";
@@ -35,21 +30,16 @@ export default function Contact() {
     e.preventDefault();
     setStatus("sending");
     try {
-      await emailjs.send(
-        EMAILJS_SERVICE,
-        EMAILJS_TEMPLATE,
-        {
-          from_name:  form.name,
-          from_email: form.email,
-          message:    form.message,
-          to_email:   info.email,
-        },
-        EMAILJS_PUBLIC
-      );
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: form.name, email: form.email, message: form.message }),
+      });
+      if (!res.ok) throw new Error("Server error");
       setStatus("success");
       setForm({ name:"", email:"", message:"" });
     } catch (err) {
-      console.error("EmailJS error:", err);
+      console.error("Contact error:", err);
       setStatus("error");
     }
   };
