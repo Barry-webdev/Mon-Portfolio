@@ -84,8 +84,10 @@ export const info: Info = {
 // ─────────────────────────────────────────────
 export const skills: Skill[] = [
   { name: "JavaScript", level: 90, category: "language" },
+  { name: "TypeScript", level: 80, category: "language" },
   { name: "React.js", level: 88, category: "frontend" },
   { name: "React Native", level: 82, category: "mobile" },
+  { name: "Expo", level: 78, category: "mobile" },
   { name: "Next.js", level: 85, category: "frontend" },
   { name: "Tailwind CSS", level: 88, category: "frontend" },
   { name: "HTML5 / CSS3", level: 92, category: "frontend" },
