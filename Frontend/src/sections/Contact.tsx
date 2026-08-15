@@ -48,7 +48,8 @@ export default function Contact() {
       );
       setStatus("success");
       setForm({ name:"", email:"", message:"" });
-    } catch {
+    } catch (err) {
+      console.error("EmailJS error:", err);
       setStatus("error");
     }
   };
