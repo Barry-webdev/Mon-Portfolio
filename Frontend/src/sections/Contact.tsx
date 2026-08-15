@@ -1,9 +1,15 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { useLang } from "../hooks/useLang";
 import { info } from "../data";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
+const EMAILJS_SERVICE  = "service_mbe57vi";
+const EMAILJS_TEMPLATE = "template_4pcbs0b";
+const EMAILJS_PUBLIC   = "MFRQ3N756gv1hVbuW";
+
 interface FormState { name: string; email: string; message: string; }
+type SendStatus = "idle" | "sending" | "success" | "error";
 
 const inputBase: React.CSSProperties = {
   width:"100%", padding:"0.8125rem 1rem",
@@ -16,8 +22,8 @@ const inputBase: React.CSSProperties = {
 
 export default function Contact() {
   const { lang } = useLang();
-  const [form, setForm]         = useState<FormState>({ name:"", email:"", message:"" });
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm]       = useState<FormState>({ name:"", email:"", message:"" });
+  const [status, setStatus]   = useState<SendStatus>("idle");
   const header = useScrollReveal();
   const left   = useScrollReveal();
   const right  = useScrollReveal();
@@ -25,12 +31,26 @@ export default function Contact() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm(p => ({ ...p, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(lang==="fr" ? "Contact depuis le portfolio" : "Contact from portfolio");
-    const body = encodeURIComponent(`Nom: ${form.name}\nEmail: ${form.email}\n\n${form.message}`);
-    window.location.href = `mailto:${info.email}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
+    setStatus("sending");
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE,
+        EMAILJS_TEMPLATE,
+        {
+          from_name:  form.name,
+          from_email: form.email,
+          message:    form.message,
+          to_email:   info.email,
+        },
+        EMAILJS_PUBLIC
+      );
+      setStatus("success");
+      setForm({ name:"", email:"", message:"" });
+    } catch {
+      setStatus("error");
+    }
   };
 
   const LINKS = [
@@ -122,7 +142,7 @@ export default function Contact() {
               boxShadow:"var(--shadow-card)",
             }}
           >
-            {submitted ? (
+            {status === "success" ? (
               <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"1rem", padding:"2rem", textAlign:"center", minHeight:"280px" }}>
                 <div style={{ fontSize:"3.5rem", animation:"scaleIn 0.5s ease both" }}>✅</div>
                 <h3 style={{ margin:0, color:"var(--text-primary)", fontWeight:800, fontSize:"1.25rem" }}>
@@ -166,22 +186,33 @@ export default function Contact() {
                     onBlur={e=>{ e.currentTarget.style.borderColor="var(--border)"; e.currentTarget.style.boxShadow="none"; }}
                   />
                 </div>
-                <button type="submit" style={{
+                <button type="submit" disabled={status === "sending"} style={{
                   padding:"0.9375rem", borderRadius:"0.875rem", border:"none",
                   background:"linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-purple) 100%)",
-                  color:"#fff", fontSize:"0.9375rem", fontWeight:800, cursor:"pointer",
+                  color:"#fff", fontSize:"0.9375rem", fontWeight:800, cursor: status === "sending" ? "not-allowed" : "pointer",
                   display:"flex", alignItems:"center", justifyContent:"center", gap:"0.5rem",
                   transition:"transform 0.2s, box-shadow 0.2s",
                   boxShadow:"var(--shadow-glow-teal)", fontFamily:"var(--font-sans)",
+                  opacity: status === "sending" ? 0.7 : 1,
                 }}
-                  onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 16px 40px rgba(0,212,170,0.4)"; }}
+                  onMouseEnter={e=>{ if(status !== "sending") { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 16px 40px rgba(0,212,170,0.4)"; }}}
                   onMouseLeave={e=>{ e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="var(--shadow-glow-teal)"; }}
                 >
-                  {lang==="fr" ? "Envoyer le message" : "Send message"}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                  </svg>
+                  {status === "sending" ? (
+                    <>{lang==="fr" ? "Envoi en cours..." : "Sending..."}</>
+                  ) : (
+                    <>{lang==="fr" ? "Envoyer le message" : "Send message"}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                      </svg>
+                    </>
+                  )}
                 </button>
+                {status === "error" && (
+                  <p style={{ margin:0, textAlign:"center", fontSize:"0.875rem", color:"#f87171", fontWeight:500 }}>
+                    {lang==="fr" ? "❌ Une erreur est survenue. Réessayez ou contactez-moi directement." : "❌ Something went wrong. Please try again or contact me directly."}
+                  </p>
+                )}
               </form>
             )}
           </div>
