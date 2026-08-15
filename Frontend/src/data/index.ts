@@ -70,8 +70,8 @@ export const info: Info = {
     en: "JavaScript · React · Next.js · Node.js · PostgreSQL",
   },
   about: {
-    fr: "Développeur Full-Stack spécialisé dans la conception d'applications web modernes, de l'interface jusqu'à la logique serveur. Je travaille avec React, Next.js, Tailwind CSS, Node.js, Prisma et PostgreSQL. Formateur en développement web, je combine expertise technique et transmission du savoir.",
-    en: "Full-Stack Developer specialized in building modern web applications, from UI to server logic. I work with React, Next.js, Tailwind CSS, Node.js, Prisma and PostgreSQL. Also a web development trainer, I combine technical expertise with knowledge sharing.",
+    fr: "Développeur Full-Stack spécialisé dans la conception d'applications web & mobile modernes, de l'interface jusqu'à la logique serveur. Je travaille avec React, React Native, Next.js, Tailwind CSS, Node.js, Prisma et PostgreSQL. Formateur en développement web, je combine expertise technique et transmission du savoir.",
+    en: "Full-Stack Developer specialized in building modern web & mobile applications, from UI to server logic. I work with React, React Native, Next.js, Tailwind CSS, Node.js, Prisma and PostgreSQL. Web development trainer, I combine technical expertise with knowledge sharing.",
   },
   phone: "+224 623 897 381",
   email: "babdoulrazzai@gmail.com",
@@ -85,6 +85,7 @@ export const info: Info = {
 export const skills: Skill[] = [
   { name: "JavaScript", level: 90, category: "language" },
   { name: "React.js", level: 88, category: "frontend" },
+  { name: "React Native", level: 82, category: "mobile" },
   { name: "Next.js", level: 85, category: "frontend" },
   { name: "Tailwind CSS", level: 88, category: "frontend" },
   { name: "HTML5 / CSS3", level: 92, category: "frontend" },

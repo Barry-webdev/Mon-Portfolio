@@ -4,7 +4,8 @@ import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const STRENGTHS = [
   { icon: "⚡", titleFr:"Front-End",         textFr:"React · Next.js · Tailwind",    titleEn:"Front-End",  textEn:"React · Next.js · Tailwind"  },
-  { icon: "🔧", titleFr:"Back-End",          textFr:"Node.js · API REST · Auth",     titleEn:"Back-End",   textEn:"Node.js · REST API · Auth"    },
+  { icon: "�", titleFr:"Mobile",            textFr:"React Native",                  titleEn:"Mobile",     textEn:"React Native"                },
+  { icon: "�🔧", titleFr:"Back-End",          textFr:"Node.js · API REST · Auth",     titleEn:"Back-End",   textEn:"Node.js · REST API · Auth"    },
   { icon: "🗄️", titleFr:"Base de données",   textFr:"PostgreSQL · Prisma · MongoDB", titleEn:"Database",   textEn:"PostgreSQL · Prisma · MongoDB"},
   { icon: "🎓", titleFr:"Formateur",          textFr:"Simplon · CSP EIB-Pita",       titleEn:"Trainer",    textEn:"Simplon · CSP EIB-Pita"       },
 ];
