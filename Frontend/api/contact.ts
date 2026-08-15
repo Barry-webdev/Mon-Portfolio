@@ -1,12 +1,12 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   const { name, email, message } = req.body as {
     name: string;
@@ -18,27 +18,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: "Missing fields" });
   }
 
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: "Missing API key" });
+
   try {
-    await resend.emails.send({
-      from: "Portfolio <onboarding@resend.dev>",
-      to: "babdoulrazzai@gmail.com",
-      replyTo: email,
-      subject: `[Portfolio] Message de ${name}`,
-      html: `
-        <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
-          <h2 style="color:#00D4AA">Nouveau message depuis le portfolio</h2>
-          <p><strong>Nom :</strong> ${name}</p>
-          <p><strong>Email :</strong> ${email}</p>
-          <hr style="border:1px solid #eee;margin:16px 0"/>
-          <p><strong>Message :</strong></p>
-          <p style="white-space:pre-wrap;color:#374151">${message}</p>
-        </div>
-      `,
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Portfolio <onboarding@resend.dev>",
+        to: ["babdoulrazzai@gmail.com"],
+        reply_to: email,
+        subject: `[Portfolio] Message de ${name}`,
+        html: `
+          <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
+            <h2 style="color:#00D4AA;margin:0 0 16px">Nouveau message depuis le portfolio</h2>
+            <p style="margin:0 0 8px"><strong>Nom :</strong> ${name}</p>
+            <p style="margin:0 0 8px"><strong>Email :</strong> ${email}</p>
+            <hr style="border:none;border-top:1px solid #eee;margin:16px 0"/>
+            <p style="margin:0 0 8px"><strong>Message :</strong></p>
+            <p style="white-space:pre-wrap;color:#374151;margin:0">${message}</p>
+          </div>
+        `,
+      }),
     });
+
+    if (!response.ok) {
+      const err = await response.json();
+      console.error("Resend error:", err);
+      return res.status(500).json({ error: "Failed to send email" });
+    }
 
     return res.status(200).json({ success: true });
   } catch (err) {
-    console.error("Resend error:", err);
-    return res.status(500).json({ error: "Failed to send email" });
+    console.error("Unexpected error:", err);
+    return res.status(500).json({ error: "Unexpected error" });
   }
 }
