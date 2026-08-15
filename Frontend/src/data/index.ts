@@ -246,6 +246,14 @@ export const experiences: Experience[] = [
 export const formations: Formation[] = [
   {
     title: {
+      fr: "Principes Fondamentaux de l'Intelligence Artificielle",
+      en: "Fundamentals of Artificial Intelligence",
+    },
+    school: "Heure IA",
+    period: "Juin 2026",
+  },
+  {
+    title: {
       fr: "Développement Web et Mobile",
       en: "Web and Mobile Development",
     },
