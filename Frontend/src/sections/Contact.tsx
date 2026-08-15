@@ -30,9 +30,9 @@ export default function Contact() {
     e.preventDefault();
     setStatus("sending");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("https://formspree.io/f/2e51c5c2-2473-4be5-93e0-15a6f86431f7", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ name: form.name, email: form.email, message: form.message }),
       });
       if (!res.ok) throw new Error("Server error");
