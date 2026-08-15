@@ -66,8 +66,8 @@ export const info: Info = {
     en: "Full-Stack Developer",
   },
   tagline: {
-    fr: "JavaScript · React · Next.js · Node.js · PostgreSQL",
-    en: "JavaScript · React · Next.js · Node.js · PostgreSQL",
+    fr: "JavaScript · TypeScript · React · React Native · Expo · Next.js · Node.js · PostgreSQL",
+    en: "JavaScript · TypeScript · React · React Native · Expo · Next.js · Node.js · PostgreSQL",
   },
   about: {
     fr: "Développeur Full-Stack spécialisé dans la conception d'applications web & mobile modernes, de l'interface jusqu'à la logique serveur. Je travaille avec React, React Native, Next.js, Tailwind CSS, Node.js, Prisma et PostgreSQL. Formateur en développement web, je combine expertise technique et transmission du savoir.",
