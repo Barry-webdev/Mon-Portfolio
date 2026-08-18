@@ -153,7 +153,7 @@ export default function Contact() {
             ) : (
               <form onSubmit={handleSubmit} style={{ display:"flex", flexDirection:"column", gap:"1.25rem" }}>
                 {[
-                  { name:"name",    label:lang==="fr"?"Votre nom":"Your name", type:"text",  placeholder:lang==="fr"?"Barry Abdoul Razzaï":"John Doe" },
+                  { name:"name",    label:lang==="fr"?"Votre nom":"Your name", type:"text",  placeholder:lang==="fr"?"Barry Abdoul Razzaï":"Oumou Hawa Bah" },
                   { name:"email",   label:"Email",                              type:"email", placeholder:"vous@email.com" },
                 ].map(field => (
                   <div key={field.name}>
