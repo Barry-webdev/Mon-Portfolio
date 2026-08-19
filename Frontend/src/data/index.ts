@@ -84,18 +84,19 @@ export const info: Info = {
 // ─────────────────────────────────────────────
 export const skills: Skill[] = [
   { name: "JavaScript", level: 90, category: "language" },
-  { name: "TypeScript", level: 80, category: "language" },
-  { name: "React.js", level: 88, category: "frontend" },
-  { name: "React Native", level: 82, category: "mobile" },
+  { name: "TypeScript", level: 85, category: "language" },
+  { name: "React.js / Next.js", level: 88, category: "frontend" },
+  { name: "React Native", level: 90, category: "mobile" },
   { name: "Expo", level: 78, category: "mobile" },
   { name: "Next.js", level: 85, category: "frontend" },
   { name: "Tailwind CSS", level: 88, category: "frontend" },
   { name: "HTML5 / CSS3", level: 92, category: "frontend" },
-  { name: "Node.js", level: 82, category: "backend" },
+  { name: "Node.js", level: 75, category: "backend" },
   { name: "Next.js API Routes", level: 80, category: "backend" },
   { name: "Prisma ORM", level: 78, category: "database" },
   { name: "PostgreSQL", level: 75, category: "database" },
   { name: "MongoDB", level: 72, category: "database" },
+  { name: "UI / UX (Figma)", level: 70, category: "other" },
   { name: "Git / GitHub", level: 85, category: "devops" },
   { name: "Vercel", level: 82, category: "devops" },
 ];

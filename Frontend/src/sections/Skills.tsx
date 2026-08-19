@@ -1,127 +1,191 @@
 import { useLang } from "../hooks/useLang";
-import { skills } from "../data";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
-const CATEGORY_META: Record<string, { fr:string; en:string; color:string; icon:string }> = {
-  frontend: { fr:"Front-End",       en:"Front-End",    color:"#00D4AA", icon:"🎨" },
-  backend:  { fr:"Back-End",        en:"Back-End",     color:"#6C63FF", icon:"⚙️" },
-  database: { fr:"Base de données", en:"Database",     color:"#F97316", icon:"🗄️" },
-  language: { fr:"Langages",        en:"Languages",    color:"#FACC15", icon:"💡" },
-  devops:   { fr:"Outils & Deploy", en:"Tools & Deploy",color:"#60A5FA",icon:"🚀" },
-  mobile:   { fr:"Mobile",          en:"Mobile",       color:"#F472B6", icon:"📱" },
-  other:    { fr:"Autre",           en:"Other",        color:"#a3a3a3", icon:"🔩" },
-};
+// Compétences principales affichées en cercles
+const MAIN_SKILLS = [
+  { name: "React / Next.js",     level: 88, color: "#00D4AA" },
+  { name: "React Native",        level: 90, color: "#00D4AA" },
+  { name: "Node.js",             level: 75, color: "#00D4AA" },
+  { name: "JavaScript / TS",     level: 85, color: "#00D4AA" },
+  { name: "UI / UX (Figma)",     level: 70, color: "#00D4AA" },
+];
+
+// Toutes les techs en tags
+const ALL_SKILLS = [
+  { name: "JavaScript",       category: "Langages",        color: "#FACC15" },
+  { name: "TypeScript",       category: "Langages",        color: "#FACC15" },
+  { name: "React.js",         category: "Front-End",       color: "#00D4AA" },
+  { name: "Next.js",          category: "Front-End",       color: "#00D4AA" },
+  { name: "Tailwind CSS",     category: "Front-End",       color: "#00D4AA" },
+  { name: "HTML5 / CSS3",     category: "Front-End",       color: "#00D4AA" },
+  { name: "React Native",     category: "Mobile",          color: "#F472B6" },
+  { name: "Expo",             category: "Mobile",          color: "#F472B6" },
+  { name: "Node.js",          category: "Back-End",        color: "#6C63FF" },
+  { name: "API REST",         category: "Back-End",        color: "#6C63FF" },
+  { name: "PostgreSQL",       category: "Base de données", color: "#F97316" },
+  { name: "Prisma ORM",       category: "Base de données", color: "#F97316" },
+  { name: "MongoDB",          category: "Base de données", color: "#F97316" },
+  { name: "Firebase",         category: "Base de données", color: "#F97316" },
+  { name: "Figma",            category: "UI/UX",           color: "#EC4899" },
+  { name: "Git / GitHub",     category: "Outils",          color: "#60A5FA" },
+  { name: "Vercel",           category: "Outils",          color: "#60A5FA" },
+  { name: "VS Code",          category: "Outils",          color: "#60A5FA" },
+];
+
+// Cercle SVG
+interface CircleProps {
+  level: number;
+  color: string;
+  size?: number;
+  visible: boolean;
+}
+
+function CircleProgress({ level, color, size = 120, visible }: CircleProps) {
+  const stroke = 8;
+  const r = (size - stroke) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (visible ? level / 100 : 0) * circ;
+
+  return (
+    <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+      {/* Track */}
+      <circle cx={size/2} cy={size/2} r={r}
+        fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={stroke} />
+      {/* Progress */}
+      <circle cx={size/2} cy={size/2} r={r}
+        fill="none" stroke={color} strokeWidth={stroke}
+        strokeLinecap="round"
+        strokeDasharray={circ}
+        strokeDashoffset={offset}
+        style={{ transition: visible ? "stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1)" : "none" }}
+      />
+    </svg>
+  );
+}
 
 export default function Skills() {
   const { lang } = useLang();
-  const header = useScrollReveal();
-
-  const categories = Array.from(new Set(skills.map(s => s.category)));
+  const header  = useScrollReveal();
+  const circles = useScrollReveal();
+  const tags    = useScrollReveal();
 
   return (
-    <section id="skills" style={{ backgroundColor:"var(--bg-alt)", padding:"7rem 1.5rem" }}>
-      <div style={{ maxWidth:"1100px", margin:"0 auto" }}>
+    <section id="skills" style={{ backgroundColor: "var(--bg-alt)", padding: "7rem 1.5rem" }}>
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
         {/* Header */}
         <div
           ref={header.ref as React.RefObject<HTMLDivElement>}
           className={`reveal ${header.visible ? "visible" : ""}`}
-          style={{ textAlign:"center", marginBottom:"4rem" }}
+          style={{ textAlign: "center", marginBottom: "4rem" }}
         >
           <span style={{
-            display:"inline-block", fontSize:"0.6875rem", fontWeight:700,
-            letterSpacing:"0.18em", textTransform:"uppercase",
-            color:"var(--accent-purple)", marginBottom:"0.75rem",
-            fontFamily:"var(--font-mono)",
+            display: "inline-block", fontSize: "0.6875rem", fontWeight: 700,
+            letterSpacing: "0.18em", textTransform: "uppercase",
+            color: "var(--accent-teal)", marginBottom: "0.75rem",
+            fontFamily: "var(--font-mono)",
           }}>
-            {lang==="fr" ? "// Compétences" : "// Skills"}
+            {lang === "fr" ? "// Compétences" : "// Skills"}
           </span>
           <h2 style={{
-            margin:0, fontSize:"clamp(1.875rem, 5vw, 2.75rem)",
-            fontWeight:900, color:"var(--text-primary)", letterSpacing:"-0.03em",
+            margin: 0, fontSize: "clamp(1.875rem, 5vw, 2.75rem)",
+            fontWeight: 900, color: "var(--text-primary)", letterSpacing: "-0.03em",
           }}>
-            {lang==="fr" ? "Stack technique" : "Tech Stack"}
+            {lang === "fr" ? "Mes Atouts" : "My Strengths"}
           </h2>
-          <p style={{ marginTop:"0.75rem", color:"var(--text-muted)", fontSize:"0.9375rem" }}>
-            {lang==="fr" ? "Les technologies que j'utilise au quotidien" : "Technologies I use on a daily basis"}
+          <p style={{ marginTop: "0.75rem", color: "var(--text-muted)", fontSize: "0.9375rem" }}>
+            {lang === "fr" ? "Les technologies que je maîtrise" : "Technologies I master"}
           </p>
         </div>
 
-        {/* Grid */}
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(300px, 1fr))", gap:"1.25rem" }}>
-          {categories.map((cat, ci) => {
-            const meta = CATEGORY_META[cat] ?? CATEGORY_META.other;
-            const catSkills = skills.filter(s => s.category === cat);
-            return (
-              <SkillCard key={cat} meta={meta} catSkills={catSkills} lang={lang} delay={ci * 80} />
-            );
-          })}
+        {/* Cercles principaux */}
+        <div
+          ref={circles.ref as React.RefObject<HTMLDivElement>}
+          className={`reveal ${circles.visible ? "visible" : ""}`}
+          style={{
+            display: "flex", flexWrap: "wrap",
+            justifyContent: "center", gap: "2rem",
+            marginBottom: "4rem",
+          }}
+        >
+          {MAIN_SKILLS.map((skill, i) => (
+            <div key={skill.name}
+              style={{
+                display: "flex", flexDirection: "column",
+                alignItems: "center", gap: "0.75rem",
+                transitionDelay: `${i * 100}ms`,
+              }}
+              className={`reveal ${circles.visible ? "visible" : ""}`}
+            >
+              {/* Cercle + % */}
+              <div style={{ position: "relative", width: 120, height: 120 }}>
+                <CircleProgress level={skill.level} color={skill.color} visible={circles.visible} />
+                <div style={{
+                  position: "absolute", inset: 0,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  flexDirection: "column",
+                }}>
+                  <span style={{
+                    fontSize: "1.375rem", fontWeight: 900,
+                    color: "var(--text-primary)", fontFamily: "var(--font-mono)",
+                    lineHeight: 1,
+                  }}>
+                    {circles.visible ? `${skill.level}%` : "0%"}
+                  </span>
+                </div>
+              </div>
+              <span style={{
+                fontSize: "0.8125rem", fontWeight: 600,
+                color: "var(--text-secondary)", textAlign: "center",
+                whiteSpace: "nowrap",
+              }}>
+                {skill.name}
+              </span>
+            </div>
+          ))}
         </div>
+
+        {/* Toutes les techs en tags */}
+        <div
+          ref={tags.ref as React.RefObject<HTMLDivElement>}
+          className={`reveal ${tags.visible ? "visible" : ""}`}
+          style={{
+            padding: "2rem",
+            borderRadius: "1.5rem",
+            border: "1px solid var(--border)",
+            backgroundColor: "var(--bg-card)",
+          }}
+        >
+          <h3 style={{
+            margin: "0 0 1.5rem",
+            fontSize: "0.9375rem", fontWeight: 700,
+            color: "var(--text-primary)",
+            fontFamily: "var(--font-mono)",
+          }}>
+            {lang === "fr" ? "// Stack complète" : "// Full stack"}
+          </h3>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.625rem" }}>
+            {ALL_SKILLS.map(skill => (
+              <span key={skill.name} style={{
+                display: "inline-flex", alignItems: "center", gap: "0.375rem",
+                padding: "0.375rem 0.875rem", borderRadius: "9999px",
+                border: `1px solid ${skill.color}25`,
+                backgroundColor: `${skill.color}0e`,
+                color: skill.color, fontSize: "0.8125rem", fontWeight: 600,
+                fontFamily: "var(--font-mono)",
+                transition: "transform 0.2s, background 0.2s",
+                cursor: "default",
+              }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = `${skill.color}20`; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.backgroundColor = `${skill.color}0e`; e.currentTarget.style.transform = "translateY(0)"; }}
+              >
+                {skill.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
-  );
-}
-
-interface SkillCardProps {
-  meta: { fr:string; en:string; color:string; icon:string };
-  catSkills: typeof skills;
-  lang: string;
-  delay: number;
-}
-
-function SkillCard({ meta, catSkills, lang, delay }: SkillCardProps) {
-  const { ref, visible } = useScrollReveal();
-
-  return (
-    <div
-      ref={ref as React.RefObject<HTMLDivElement>}
-      className={`reveal ${visible ? "visible" : ""}`}
-      style={{
-        transitionDelay: `${delay}ms`,
-        padding:"1.5rem", borderRadius:"1.375rem",
-        border:"1px solid var(--border)",
-        backgroundColor:"var(--bg-card)",
-        transition:"border-color 0.25s, transform 0.25s, box-shadow 0.25s",
-      }}
-      onMouseEnter={e=>{ e.currentTarget.style.borderColor=`${meta.color}40`; e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow=`0 16px 40px ${meta.color}12`; }}
-      onMouseLeave={e=>{ e.currentTarget.style.borderColor="var(--border)"; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="none"; }}
-    >
-      {/* Category pill */}
-      <div style={{
-        display:"inline-flex", alignItems:"center", gap:"0.5rem",
-        marginBottom:"1.375rem", padding:"0.3rem 0.875rem",
-        borderRadius:"9999px",
-        backgroundColor:`${meta.color}12`,
-        border:`1px solid ${meta.color}30`,
-      }}>
-        <span style={{ fontSize:"0.875rem" }}>{meta.icon}</span>
-        <span style={{ fontSize:"0.75rem", fontWeight:700, color:meta.color, letterSpacing:"0.06em", fontFamily:"var(--font-mono)" }}>
-          {lang==="fr" ? meta.fr : meta.en}
-        </span>
-      </div>
-
-      {/* Skills */}
-      <div style={{ display:"flex", flexDirection:"column", gap:"1rem" }}>
-        {catSkills.map(skill => (
-          <div key={skill.name}>
-            <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"0.4rem" }}>
-              <span style={{ fontSize:"0.875rem", fontWeight:600, color:"var(--text-secondary)" }}>{skill.name}</span>
-              <span style={{ fontSize:"0.75rem", fontWeight:700, color:meta.color, fontFamily:"var(--font-mono)" }}>{skill.level}%</span>
-            </div>
-            <div style={{
-              height:"5px", borderRadius:"9999px",
-              backgroundColor:"var(--border)", overflow:"hidden",
-            }}>
-              <div style={{
-                height:"100%", borderRadius:"9999px",
-                width: visible ? `${skill.level}%` : "0%",
-                background:`linear-gradient(90deg, ${meta.color}80, ${meta.color})`,
-                transition:`width 1.1s cubic-bezier(.22,1,.36,1) ${Math.random()*200}ms`,
-              }}/>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
